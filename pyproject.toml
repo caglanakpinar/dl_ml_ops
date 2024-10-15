@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "dl-ml-ops"
+version = "0.1.0"
+description = ""
+authors = ["caglanakpinar <cakpinar23@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "mlp" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+click = "^8.1.7"
+tensorflow = "^2.17.0"
+pyyaml = "^6.0.2"
+keras-tuner = "^1.4.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+mlp = "mlp.cli.cli:cli"
