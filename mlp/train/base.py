@@ -60,12 +60,20 @@ class BaseHyperModel(HyperModel, Paths):
     def fit(self, fp, model: keras.Model, **kwargs):
         NotImplementedError()
 
-    def random_search(self, model: HyperModel, x, y, validation_data, max_trials):
+    def random_search(self, model: HyperModel, train_data, validation_data, max_trials):
         tuner = RandomSearch(
             model,
             objective="loss",
             max_trials=max_trials,
             project_dir=self.parent_dir / self.tuning_project_dir,
         )
-        tuner.search(x=x, y=y, validation_data=validation_data)
+        tuner.search(
+            x=train_data["x"]
+            if self.temp_train_args.get("target") is not None
+            else train_data,
+            y=train_data["y"]
+            if self.temp_train_args.get("target") is not None
+            else train_data,
+            validation_data=validation_data,
+        )
         self.temp_train_args.store_params(tuner.get_best_hyperparameters()[0].values)

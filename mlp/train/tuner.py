@@ -17,10 +17,12 @@ class Tuner:
         model.set_model(model)
         model.set_train_params(params)
         model.set_hyper_params(hyper_params)
+        _train, _val = data_builder.fetch_data(
+            split=True, split_ratio=params.get("split_ratio")
+        )
         model.random_search(
             model,
-            x=data_builder.fetch_data(),
-            y=data_builder.fetch_data(),
-            validation_data=data_builder.fetch_data(),
+            train=_train,
+            validation_data=_val,
             max_trials=hyper_params.get("max_trials"),
         )
