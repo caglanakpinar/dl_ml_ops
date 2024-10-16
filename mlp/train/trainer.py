@@ -11,12 +11,15 @@ class Trainer:
         self.configurations = configurations
 
     @classmethod
-    def create_trainer_from_config(cls, model:  callable, configurations: Params):
+    def create_trainer_from_config(cls, model: callable, configurations: Params):
+        return Trainer(model=model(configurations), configurations=configurations)
+
+    @classmethod
+    def create_checkpoint_trainer_from_config(
+        cls, model: callable, configurations: Params
+    ):
         return Trainer(
-            model=model(
-                configurations
-            ),
-            configurations=configurations
+            model=model.read_checkpoint(configurations), configurations=configurations
         )
 
     def trainer(self, train_dataset: tf.data.Dataset, build_by_config=False, **kwargs):
@@ -25,5 +28,7 @@ class Trainer:
         self.model.train(train_dataset=train_dataset, **kwargs)
 
     def get_model(self, attribute_name):
-        assert getattr(self, attribute_name, None) is not None, AttributeError(f"model attribute name: {attribute_name} in training class")
+        assert getattr(self, attribute_name, None) is not None, AttributeError(
+            f"model attribute name: {attribute_name} in training class"
+        )
         return getattr(self, attribute_name)
