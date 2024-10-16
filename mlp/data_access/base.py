@@ -13,8 +13,8 @@ class BaseData(Paths):
         self.params = params
         NotImplementedError()
 
-    @abstractmethod
-    def read(self, **kwargs):
+    @classmethod
+    def read(cls, params: Params, **kwargs):
         NotImplementedError()
 
     def get_data(self):

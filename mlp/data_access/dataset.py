@@ -3,7 +3,7 @@ from mlp.data_access.base import BaseData
 
 
 class Data(BaseData):
-    def __init__(self, dataset_creator, configurations: Params):
+    def __init__(self, dataset_creator: BaseData, configurations: Params):
         self.dataset_creator = dataset_creator
         self.configurations = configurations
 
@@ -12,10 +12,10 @@ class Data(BaseData):
         cls, dataset_creator: BaseData, configurations: Params
     ):
         return Data(
-            dataset_creator=dataset_creator(configurations),
+            dataset_creator=dataset_creator,
             configurations=configurations,
         )
 
     def fetch_data(self, **kwargs) -> object:
-        _cls: BaseData = self.dataset_creator.read(self.configurations)
+        _cls: BaseData = self.dataset_creator.read(self.configurations, **kwargs)
         return _cls.get_data()
