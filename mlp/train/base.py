@@ -65,7 +65,7 @@ class BaseHyperModel(HyperModel, Paths):
             model,
             objective="loss",
             max_trials=max_trials,
-            project_dir=self.parent_dir / self.tuning_project_dir,
+            directory=self.parent_dir / self.tuning_project_dir,
         )
         tuner.search(
             x=train_data["x"]

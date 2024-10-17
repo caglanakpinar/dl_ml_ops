@@ -18,4 +18,5 @@ class Data(BaseData):
 
     def fetch_data(self, **kwargs) -> object:
         _cls: BaseData = self.dataset_creator.read(self.configurations, **kwargs)
+        _cls.params: Params = self.configurations
         return _cls.get_data(**kwargs)

@@ -22,7 +22,7 @@ class Tuner:
         )
         model.random_search(
             model,
-            train=_train,
+            train_data=_train,
             validation_data=_val,
             max_trials=hyper_params.get("max_trials"),
         )
