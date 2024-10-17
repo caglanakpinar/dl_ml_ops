@@ -69,10 +69,10 @@ class BaseHyperModel(HyperModel, Paths):
         )
         tuner.search(
             x=train_data["x"]
-            if self.temp_train_args.get("target") is not None
+            if getattr(self.temp_train_args, "target", None) is not None
             else train_data,
             y=train_data["y"]
-            if self.temp_train_args.get("target") is not None
+            if getattr(self.temp_train_args, "target", None) is not None
             else train_data,
             validation_data=validation_data,
         )

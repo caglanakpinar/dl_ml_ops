@@ -4,11 +4,10 @@ import click
 
 from mlp.configs import Params
 from mlp.data_access import BaseData, Data
-from mlp.train import Trainer, Tuner
-from mlp.train.tuner import BaseHyperModel
+from mlp.train import BaseHyperModel, BaseModel, Trainer, Tuner
 
 
-def import_class(path) -> object | BaseData | BaseHyperModel:
+def import_class(path) -> object | BaseData | BaseModel | BaseHyperModel:
     if locate(path) is None:
         ImportError(f"model class not found in given path: {path}")
     else:
@@ -77,6 +76,7 @@ def train(
     ),
 )
 @click.option("--tuning_class", required=True)
+@click.option("--training_class", required=True)
 @click.option(
     "--trainer_config_path",
     default="configs/params.yaml",
@@ -90,6 +90,7 @@ def train(
 @click.option("--data_access_class", required=True)
 def tune(
     tuning_class,
+    training_class,
     trainer_config_path,
     hyper_parameter_config_path,
     data_access_class,
@@ -101,6 +102,7 @@ def tune(
     )
     Tuner.tune(
         import_class(tuning_class),
+        import_class(training_class),
         trainer_config_path,
         hyper_parameter_config_path,
         databuilder,
