@@ -32,15 +32,13 @@ def model_run():
         allow_extra_args=True,
     ),
 )
-@click.option(
-    "--training_class",
-)
+@click.option("--training_class", required=True)
 @click.option(
     "--trainer_config_path",
+    default="configs/params.yaml",
+    help="where trainer .yaml is being stored",
 )
-@click.option(
-    "--data_access_class",
-)
+@click.option("--data_access_class", required=True)
 @click.option("--continuous_training", default=False)
 @click.option("--schedule", default=None)
 def train(
@@ -78,9 +76,7 @@ def train(
         allow_extra_args=True,
     ),
 )
-@click.option(
-    "--tuning_class",
-)
+@click.option("--tuning_class", required=True)
 @click.option(
     "--trainer_config_path",
     default="configs/params.yaml",
@@ -91,9 +87,7 @@ def train(
     default="configs/hyper_params.yaml",
     help="where hyperparameter tuning .yaml is being stored",
 )
-@click.option(
-    "--data_access_class",
-)
+@click.option("--data_access_class", required=True)
 def tune(
     tuning_class,
     trainer_config_path,
