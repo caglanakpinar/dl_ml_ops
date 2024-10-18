@@ -7,3 +7,29 @@ repo_url: https://github.com/caglanakpinar/dl_ml_ops
 
 theme:
   name: material
+  features:
+    - instant
+    - navigation.expand
+    - content.tabs.link
+    - content.code.copy
+
+nav:
+  - getting started: intro.md
+  - concept: concept.md
+  - configurations: params.md
+  - build network: build.md
+  - train: train.md
+  - hyperparameters: tune.md
+  - data access: data_access.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - admonition
+  - pymdownx.details
