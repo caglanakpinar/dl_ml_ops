@@ -1,17 +1,41 @@
-# Welcome to MkDocs
+# Deep Learning ML OPS
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+Deep Learning ML OPS, known as `dl-ml-ops`, is a kind of a ml tool to make your life easier in order to use neural network only with .yaml files. `dl-ml-ops` helps you to build network with multiple towers, multi-layer-perceptrons without touching any code, it allows us to train with given parameters. 
+It also allows us to run hyperparameter tuning and serve and monitor the model performance metrics. 
 
-## Commands
+Tool is uses open-source deep learning tools tensorflow, keras, keras_tunes in background. 
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Installation
+
+Tool can be used any other package by install it via git command
+
+```bash
+poetry add git+https://github.com/caglanakpinar/dl_ml_ops.git
+```
+
+* `poetry run main.py model train --training_class ` - run model
+* `poetry run main.py model build_train --training_class ` - run model [DEV]
+* `poetry run main.py model tune --training_class ` - run model
+
 
 ## Project layout
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+    mlp/
+        cli/   
+            - cli.py  
+        configs/
+            - configurations.py  
+        data_access/  
+            - base.py
+            - datasets.py
+        logger/
+            - logs.py
+        monitoring/  # not yet implemented
+        serve/       # not yet implemented
+        train/
+            - base.py
+            - build.py
+            - trainer.py
+            - tuner.py
+        utils/
+            - paths.py
