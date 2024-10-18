@@ -16,6 +16,8 @@ pyyaml = "^6.0.2"
 keras-tuner = "^1.4.7"
 scikit-learn = "^1.5.2"
 pandas = "^2.2.3"
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.5.41"
 
 
 [tool.poetry.group.dev.dependencies]

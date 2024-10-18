@@ -1,0 +1,9 @@
+site_name: Deep Learning ML OPS
+site_description: How to build neural network only by editing .yaml file?
+site_url: https://github.com/caglanakpinar/dl_ml_ops
+
+repo_name: dl_ml_ops
+repo_url: https://github.com/caglanakpinar/dl_ml_ops
+
+theme:
+  name: material
