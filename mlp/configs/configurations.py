@@ -68,4 +68,4 @@ class Params(Paths):
             else folder,
             "w",
         ) as file:
-            yaml.dump(params)
+            yaml.dump(params, file)
