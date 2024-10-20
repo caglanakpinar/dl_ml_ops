@@ -15,7 +15,7 @@ theme:
 
 nav:
   - getting started: intro.md
-  - concept: concept.md
+  - how to run: run.md
   - configurations: params.md
   - build network: build.md
   - train: train.md

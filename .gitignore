@@ -3,3 +3,14 @@
 *.iml
 /.idea
 /dist
+/mlp/data_access/__pycache__
+/mlp/configs/__pycache__
+/mlp/logger/__pycache__
+/mlp/monitoring/__pycache__
+/mlp/serve/__pycache__
+/mlp/train/__pycache__
+/mlp/cli/__pycache__
+/hyper_parameter_tuning
+/__pycache__
+/mlp/__pycache__
+/mlp/utils/__pycache__
