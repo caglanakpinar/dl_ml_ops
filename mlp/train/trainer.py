@@ -1,8 +1,5 @@
-import tensorflow as tf
-
-from mlp.configs.configurations import Params
+from mlp import BaseData, Params, log
 from mlp.train.base import BaseModel
-from mlp.train.builder import NeuralNetBuilder
 
 
 class Trainer:
@@ -18,14 +15,18 @@ class Trainer:
     def create_checkpoint_trainer_from_config(
         cls, model: callable, configurations: Params
     ):
-        return Trainer(
-            model=model.read_checkpoint(configurations), configurations=configurations
-        )
+        try:
+            return Trainer(
+                model=model.read_checkpoint(configurations),
+                configurations=configurations,
+            )
+        except Exception as e:
+            log(log.error, e)
+            log(log.info, "checkpoint for the model is not available yet.")
+            return Trainer(model=model(configurations), configurations=configurations)
 
-    def trainer(self, train_dataset: tf.data.Dataset, build_by_config=False, **kwargs):
-        if build_by_config:
-            self.model = NeuralNetBuilder(**kwargs)
-        self.model.train(train_dataset=train_dataset, **kwargs)
+    def trainer(self, data_class: BaseData):
+        self.model.train(dataset=data_class.fetch_data())
 
     def get_model(self, attribute_name):
         assert getattr(self, attribute_name, None) is not None, AttributeError(

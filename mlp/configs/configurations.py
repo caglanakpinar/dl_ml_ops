@@ -2,10 +2,36 @@ from pathlib import Path
 
 import yaml
 
-from mlp.utils.paths import Paths
+from mlp.utils import Paths
 
 
 class Params(Paths):
+    """default parameters for Network"""
+
+    name: str = ""
+    input_size: int | tuple = 10
+    output_size: int = 1
+    activation: str = "relu"
+    activation_output: str = "sigmoid"
+    use_bias: bool = False
+    batch_size: int = 64
+    epochs: int = 200
+    units: int = 16
+    h_layers: int = 3
+    dropout: float = 0.0
+    l1: float = 0.0001
+    l2: float = 0.0001
+    lr: float = 0.0001
+    loss: str = "binary_crossentropy"
+    optimizer: str = "adam"
+    model_type: str = "mlp"
+    # below parameters will be used only for LSTM-Text layers
+    vocab_size: int = 1_000
+    embedding_dimensions: int = 5
+    max_len: int = 10
+    continuous_training: bool = False
+    metrics: list | str = ["accuracy"]
+
     def __init__(
         self,
         trainer_config_path: Path | str = None,
@@ -19,7 +45,7 @@ class Params(Paths):
     def get(self, p):
         assert (
             getattr(self, p, None) is not None
-        ), f"{p} - is not available at train parameters .yaml file"
+        ), f"<{p}> - is not available at train parameters .yaml file"
         return getattr(self, p)
 
     def read_from_config(

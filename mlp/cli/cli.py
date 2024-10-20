@@ -3,8 +3,9 @@ from pydoc import locate
 import click
 
 from mlp.configs import Params
-from mlp.data_access import BaseData, Data
-from mlp.train import BaseHyperModel, BaseModel, Trainer, Tuner
+from mlp.data_access import BaseData
+from mlp.train import BaseHyperModel, BaseModel, Network, Trainer, Tuner
+from mlp.train.builder import HyperNetwork
 
 
 def import_class(path) -> object | BaseData | BaseModel | BaseHyperModel:
@@ -31,7 +32,7 @@ def model_run():
         allow_extra_args=True,
     ),
 )
-@click.option("--training_class", required=True)
+@click.option("--training_class", required=False)
 @click.option(
     "--trainer_config_path",
     default="configs/params.yaml",
@@ -39,33 +40,42 @@ def model_run():
 )
 @click.option("--data_access_class", required=True)
 @click.option("--continuous_training", default=False)
+@click.option("--build_network_from_config", default=False)
 @click.option("--schedule", default=None)
 def train(
     training_class,
     trainer_config_path,
     data_access_class,
     continuous_training,
+    build_network_from_config,
     schedule,
     **kwargs,
 ):
-    assert training_class is not None, AssertionError("training_class is missing")
+    if build_network_from_config:
+        assert training_class is not None, AssertionError("training_class is missing")
     assert trainer_config_path is not None, AssertionError(
         "trainer_config_path is missing"
     )
     assert data_access_class is not None, AssertionError("data_access_class is missing")
-    params = Params(trainer_config_path, **kwargs)
-    if bool(continuous_training):
-        trainer = Trainer.create_checkpoint_trainer_from_config(
-            import_class(training_class), params
-        )
-    else:
-        trainer = Trainer.create_trainer_from_config(
-            import_class(training_class), params
-        )
-    databuilder = Data.create_trainer_from_config(
-        import_class(data_access_class), params
+    params = Params(
+        trainer_config_path,
+        **{
+            **kwargs,
+            **{
+                "continuous_training": continuous_training,
+                "build_network_from_config": build_network_from_config,
+            },
+        },
     )
-    trainer.trainer(databuilder.fetch_data(), **kwargs)
+    training_class: BaseModel = (
+        Network if build_network_from_config else import_class(training_class)
+    )
+    databuilder: BaseData = import_class(data_access_class).read(params)
+    if bool(continuous_training):
+        trainer = Trainer.create_checkpoint_trainer_from_config(training_class, params)
+    else:
+        trainer = Trainer.create_trainer_from_config(training_class, params)
+    trainer.trainer(databuilder, **kwargs)
 
 
 @model_run.command(
@@ -75,7 +85,7 @@ def train(
         allow_extra_args=True,
     ),
 )
-@click.option("--tuning_class", required=True)
+@click.option("--tuning_class")
 @click.option("--training_class", required=True)
 @click.option(
     "--trainer_config_path",
@@ -83,27 +93,31 @@ def train(
     help="where trainer .yaml is being stored",
 )
 @click.option(
-    "--hyper_parameter_config_path",
+    "--hyperparameter_config_path",
     default="configs/hyper_params.yaml",
     help="where hyperparameter tuning .yaml is being stored",
 )
 @click.option("--data_access_class", required=True)
+@click.option("--build_network_from_config", required=True)
 def tune(
     tuning_class,
     training_class,
     trainer_config_path,
-    hyper_parameter_config_path,
+    hyperparameter_config_path,
     data_access_class,
+    build_network_from_config,
     **kwargs,
 ):
     params = Params(trainer_config_path, **kwargs)
-    databuilder = Data.create_trainer_from_config(
-        import_class(data_access_class), params
+    data_class: BaseData = import_class(data_access_class).read(params)
+    tuning_clas: BaseHyperModel = (
+        HyperNetwork if build_network_from_config else import_class(tuning_class)
     )
     Tuner.tune(
-        import_class(tuning_class),
+        tuning_clas,
         import_class(training_class),
         trainer_config_path,
-        hyper_parameter_config_path,
-        databuilder,
+        hyperparameter_config_path,
+        data_class,
+        build_network_from_config,
     )
