@@ -2,10 +2,9 @@ from pydoc import locate
 
 import click
 
+from mlp import BaseHyperModel, BaseModel, HyperNetwork, Network, Trainer, Tuner
 from mlp.configs import Params
 from mlp.data_access import BaseData
-from mlp.train import BaseHyperModel, BaseModel, Network, Trainer, Tuner
-from mlp.train.builder import HyperNetwork
 
 
 def import_class(path) -> object | BaseData | BaseModel | BaseHyperModel:
