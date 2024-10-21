@@ -84,8 +84,8 @@ def train(
         allow_extra_args=True,
     ),
 )
-@click.option("--tuning_class")
-@click.option("--training_class", required=True)
+@click.option("--tuning_class", required=False)
+@click.option("--training_class", required=False)
 @click.option(
     "--trainer_config_path",
     default="configs/params.yaml",
@@ -97,7 +97,7 @@ def train(
     help="where hyperparameter tuning .yaml is being stored",
 )
 @click.option("--data_access_class", required=True)
-@click.option("--build_network_from_config", required=True)
+@click.option("--build_network_from_config", default=False)
 def tune(
     tuning_class,
     training_class,
@@ -112,11 +112,13 @@ def tune(
     tuning_clas: BaseHyperModel = (
         HyperNetwork if build_network_from_config else import_class(tuning_class)
     )
+    training_class: BaseModel = (
+        import_class(training_class) if not build_network_from_config else Network
+    )
     Tuner.tune(
         tuning_clas,
-        import_class(training_class),
+        training_class,
         trainer_config_path,
         hyperparameter_config_path,
         data_class,
-        build_network_from_config,
     )
