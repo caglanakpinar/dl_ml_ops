@@ -107,6 +107,16 @@ def tune(
     build_network_from_config,
     **kwargs,
 ):
+    if build_network_from_config:
+        assert training_class is not None, AssertionError("training_class is missing")
+        assert tuning_class is not None, AssertionError("tuning_class is missing")
+    assert trainer_config_path is not None, AssertionError(
+        "trainer_config_path is missing"
+    )
+    assert hyperparameter_config_path is not None, AssertionError(
+        "hyperparameter_config_path is missing"
+    )
+    assert data_access_class is not None, AssertionError("data_access_class is missing")
     params = Params(trainer_config_path, **kwargs)
     data_class: BaseData = import_class(data_access_class).read(params)
     tuning_clas: BaseHyperModel = (

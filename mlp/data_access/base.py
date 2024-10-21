@@ -22,7 +22,6 @@ class BaseData(Paths):
     data: default_data_type = None
     train_dataset: data_type = None
     validation_dataset: data_type = None
-    params: Params = None
 
     @abstractmethod
     def __init__(self, params: Params):
@@ -53,7 +52,7 @@ class BaseData(Paths):
     def fetch_data(self, is_for_tuner=False) -> data_type:
         supervised = getattr(self.params, "target", None) is not None
         split = getattr(self.params, "split_ratio", None) is not None
-        if is_for_tuner:
+        if is_for_tuner and type(self.data) in [np.ndarray, pd.DataFrame]:
             split = supervised = True
             if getattr(self.params, "split_ratio", None) is None:
                 setattr(self.params, "split_ratio", 0.8)
