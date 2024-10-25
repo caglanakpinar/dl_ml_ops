@@ -1,8 +1,7 @@
 # welcome to dl-ml-ops 101
-Welcome to DL-ML-OPs wrold. Before we start, I just wanna make it clear that this platform is not a tool that you don't have any idea about the parameters about Deep Learning and make it within 10 minutes.
-However this will help you to implement Neural Network smoothly. 
-However, there are still need to be carefull and to learn while implementing it.
-From data acress to 
+Welcome to DL-ML-OPs world. Before we start, I just wanna make it clear that this platform is not a tool that you don't have any idea about the parameters about Deep Learning and make it within 10 minutes.
+However, this will help you to implement Neural Network smoothly. 
+However, there are still need to be carefully and to learn while implementing it.
 
 ## what is this all about?
 This is about to build a pipeline which is starting from fetching data, build network with parameters, train tune parameters and serve
