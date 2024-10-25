@@ -1,8 +1,9 @@
 import keras
 import pandas as pd
 from keras import layers, regularizers
+from keras_tuner import HyperParameters
 
-from mlp import BaseData, BaseModel, Metrics, Params, log
+from mlp import BaseData, BaseHyperModel, BaseModel, Metrics, Params, log
 from mlp.cli.cli import cli
 
 
@@ -91,6 +92,41 @@ class MyBinaryClassificationModel(BaseModel):
         )
 
 
+class MyBinaryClassificationTuner(BaseHyperModel):
+    """this will update your trainer_config .yaml file by taking best parameters"""
+
+    def build(self, hp: HyperParameters):
+        # updating parameters based on coming from trial
+        # combining parameters coming from trial and parameters that are available at training config parameters
+        self.update_parameter(hp)  # this will update your parameters for every trials
+        return (
+            keras.Model()
+        )  # no need to pass any model here. model class is already passed by --training_class
+
+    def fit(self, fp, model: keras.Model, **kwargs):
+        """train model based on trail parameters
+        data will be available at kwargs['x']. There is a hacky way to implement dataset in to the keras_tuner
+        kwargs['x'] = {
+            (True, True, 'x'): inputs,
+            (True, True, 'y'): outputs,
+            (True, True, 'validation_data'): tuple(x_val, y_val)
+        }
+        in order to pass dataset to training process, pass kwargs['x'] directly. training will handle it.
+        """
+        _model: BaseModel = (
+            self.temp_model(  # this training class is coming from --training_class
+                **self.search_params  # it is updated based on trial parameters
+            )
+        )
+        _model.train(
+            dataset=kwargs["x"]
+        )  # kwargs['x'] is tuple. it has ('x', 'y', validation_data)
+        return {
+            # this will calculate loss value based on given parameters --tuner_configs_path
+            "loss": _model.get_best_epoch_loss()
+        }
+
+
 if __name__ == "__main__":
     cli()
 
@@ -123,5 +159,16 @@ model train \
 --data_access_class examples.MyBinaryClassificationData \
 --trainer_config_path example_configurations/binary_classification_params_VALIDATION_SPIT.yaml \
 --build_network_from_config False
+"""
 
+# --- BUILDING NEURAL NETWORK FROM A GIVEN TRAINER OBJECT Hyperparameters tuning ---#
+"""
+poetry run python examples.py \
+model train \
+--training_class examples.MyBinaryClassificationModel \
+--tuning_class examples.MyBinaryClassificationTuner \
+--data_access_class examples.MyBinaryClassificationData \
+--trainer_config_path example_configurations/binary_classification_params_VALIDATION_SPLIT.yaml \
+--tuner_config_path example_configurations/binary_classification_params_VALIDATION_SPLIT_TUNE.yaml \
+--build_network_from_config False
 """

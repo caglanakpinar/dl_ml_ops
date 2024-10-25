@@ -29,7 +29,6 @@ class HyperNetwork(BaseHyperModel):
 
     def fit(self, fp, model: Model, **kwargs):
         _model = self.temp_model(self.search_params)
-        _model.split = True
         _model.train(dataset=kwargs["x"])
         return {"loss": _model.get_best_epoch_loss()}
 
