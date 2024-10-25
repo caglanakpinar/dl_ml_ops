@@ -50,7 +50,7 @@ def train(
     schedule,
     **kwargs,
 ):
-    if build_network_from_config:
+    if not build_network_from_config:
         assert training_class is not None, AssertionError("training_class is missing")
     assert trainer_config_path is not None, AssertionError(
         "trainer_config_path is missing"
@@ -107,7 +107,7 @@ def tune(
     build_network_from_config,
     **kwargs,
 ):
-    if build_network_from_config:
+    if not build_network_from_config:
         assert training_class is not None, AssertionError("training_class is missing")
         assert tuning_class is not None, AssertionError("tuning_class is missing")
     assert trainer_config_path is not None, AssertionError(
