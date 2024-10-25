@@ -166,7 +166,37 @@ class BaseHyperModel(HyperModel, Paths):
     def fit(self, fp, model: keras.Model, **kwargs):
         NotImplementedError()
 
+    def update_parameter(self, hp: HyperParameters):
+        """updating parameters based on parameters coming from trial"""
+        _selection_args = {
+            p: (  # taking selected parameters from HyperParameters
+                hp.Choice(p, getattr(self.temp_hyper_params, p))
+                if type(getattr(self.temp_hyper_params, p)) == list
+                else getattr(self.temp_hyper_params, p)
+            )
+            for p in self.temp_hyper_params.parameter_keys
+        }
+        _args = {  # updating parameter list. If parameters not exist on _selection_args use default from training_config
+            p: (
+                _selection_args.get(p)
+                if p in _selection_args.keys()
+                else getattr(self.temp_train_args, p)
+            )
+            for p in self.temp_train_args.parameter_keys
+        }
+        self.search_params = Params(
+            trainer_arguments=_args
+        )  # re-generating parameters by using params
+
     def random_search(self, model: HyperModel, dataset: BaseData.data_type, max_trials):
+        """executing random trials by using Random Search algorith from keras_tuner
+        !! this will update your trainer_config .yaml file by taking best parameters
+
+        objective: always loss
+        trials: available on trainer_config or hyperparameter_config
+        directory: will create <self.tuning_project_dir> in the directory that is running for
+        dataset: tuple, it will contain (x, y, validation_data)
+        """
         tuner = RandomSearch(
             model,
             objective="loss",
