@@ -17,10 +17,10 @@ nav:
   - getting started: intro.md
   - how to run: run.md
   - configurations: params.md
+  - data access: data_access.md
   - build network: build.md
   - train: train.md
   - hyperparameters: tune.md
-  - data access: data_access.md
 
 markdown_extensions:
   - pymdownx.highlight:

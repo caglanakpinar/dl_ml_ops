@@ -14,8 +14,8 @@ poetry add git+https://github.com/caglanakpinar/dl_ml_ops.git
 ```
 
 * `poetry run main.py model train --training_class ` - run model
-* `poetry run main.py model build_train --training_class ` - run model [DEV]
-* `poetry run main.py model tune --training_class ` - run model
+* `poetry run main.py model tune --tuning_class ` - run model
+* `poetry run main.py model serve --serving_class ` - run model [DEV]
 
 
 ## Project layout
@@ -27,14 +27,14 @@ poetry add git+https://github.com/caglanakpinar/dl_ml_ops.git
             - configurations.py  
         data_access/  
             - base.py
-            - datasets.py
         logger/
             - logs.py
         monitoring/  # not yet implemented
         serve/       # not yet implemented
         train/
             - base.py
-            - build.py
+            - builder.py
+            - models.py
             - trainer.py
             - tuner.py
         utils/
