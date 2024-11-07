@@ -125,6 +125,7 @@ class MyBinaryClassificationModelV2(BaseModel):
     def build(self):
         from mlp import Network
         network = Network(params=self.params)
+        network.build_network_from_config()
         return network.model
 
     def train(self, dataset: BaseData.data_type):
