@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: isort
         name: isort
-        exclude: ^mlp/train/|^mlp/cli/
+        exclude: ^mlp/train/|^mlp/cli/|examples.py
   - repo: https://github.com/ambv/black
     rev: 24.10.0
     hooks:
