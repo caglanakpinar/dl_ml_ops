@@ -3,7 +3,7 @@ import pandas as pd
 from keras import layers, regularizers
 from keras_tuner import HyperParameters
 
-from mlp import BaseData, BaseHyperModel, BaseModel, Metrics, Params, log
+from mlp import BaseData, BaseHyperModel, BaseModel, Metrics, Network, Params, log
 from mlp.cli.cli import cli
 
 
@@ -77,6 +77,30 @@ class MyBinaryClassificationModel(BaseModel):
             metrics=self.metrics(),
         )
         return model
+
+    def train(self, dataset: BaseData.data_type):
+        self.model.fit(
+            # (True (train-val split), True (y variable available for this data), x (we are taking INPUT variables))
+            x=dataset[(True, True, "x")],
+            # (True (train-val split), True (y variable available for this data), x (we are taking TARGET variable))
+            y=dataset[(True, True, "y")],
+            # (True (train-val split), True (y variable available for this data),
+            # validation_data (we are taking validation data tuple(x, y) ))
+            validation_data=dataset[(True, True, "validation_data")],
+            batch_size=self.params.batch_size,
+            epochs=self.params.epochs,
+        )
+
+
+class MyBinaryClassificationModelV2(BaseModel):
+    def __init__(self, params: Params):
+        self.params = params
+        self.model = self.buildv2()
+
+    def buildv2(self):
+        network = Network(params=self.params)
+        network.build_network_from_config()
+        return network.model
 
     def train(self, dataset: BaseData.data_type):
         self.model.fit(
