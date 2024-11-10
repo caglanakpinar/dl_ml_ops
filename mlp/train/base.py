@@ -1,3 +1,4 @@
+import datetime
 from abc import abstractmethod
 
 import keras
@@ -6,7 +7,7 @@ from keras import *
 from keras.src.layers import LeakyReLU
 from keras_tuner import HyperModel, HyperParameters, RandomSearch
 
-from mlp import BaseData
+from mlp import BaseData, log
 from mlp.configs import Params
 from mlp.utils import Paths
 
@@ -14,8 +15,6 @@ from mlp.utils import Paths
 class BaseModel(Paths):
     @abstractmethod
     def __init__(self, params: Params):
-        self.params = params
-        self.model = Model()
         self.params = params
         self.continuous_training = self.params.continuous_training
         self.model: Model = Model()
@@ -55,6 +54,49 @@ class BaseModel(Paths):
     @abstractmethod
     def train(self, dataset: tf.data.Dataset):
         NotImplementedError()
+
+    def save(self, model: Model):
+        file_name = (
+            str(datetime.datetime.now())
+            .replace("-", "")
+            .replace(" ", "")
+            .replace(":", "")[:12]
+        )
+        model.save(
+            self.model_save_directory(self.params.get("name")) / f"{file_name}.keras"
+        )
+
+    def load(self, execution_time: str | None):
+        files = os.listdir(self.model_save_directory(self.params.get("name")))
+        model_saved_time = list(sorted([int(f.split(".")[0]) for f in files]))
+        file_name = f"{max(model_saved_time)}.keras"
+        if execution_time:
+            execution_time = (
+                execution_time.replace("-", "").replace(" ", "").replace(":", "")
+            )
+            exec_t_length = len(execution_time)
+            if exec_t_length not in [12, 10]:
+                raise log(
+                    log.error,
+                    """
+                    execution date will only takes date or date with hour.
+                    e.g. 2024-11-11, 20241111, 2024-11-11 10, 2024111110
+                """,
+                )
+            if exec_t_length == 10:
+                execution_time += "00"
+            file_name = f"{execution_time}.keras"
+            if int(execution_time) not in model_saved_time:
+                date = list(
+                    sorted(
+                        [(abs(int(execution_time) - t), t) for t in model_saved_time],
+                        key=lambda x: x[0],
+                    )
+                )[0][1]
+                file_name = f"{date}.keras"
+        return keras.models.load_model(
+            self.model_save_directory(self.params.get("name")) / file_name
+        )
 
     @classmethod
     def read_checkpoint(cls, params: Params):

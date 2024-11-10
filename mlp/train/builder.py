@@ -20,10 +20,12 @@ class Network(BaseModel):
 
     @property
     def metrics(self) -> list:
+        """network metrics are coming from trainer_config"""
         return [Metrics.train_epoch_metrics(metric) for metric in self.params.metrics]
 
     @staticmethod
     def build_from_tower(params: Params) -> Tuple[Input, layers.Dense]:
+        """type of network that is coming from trainer config, default auto encoder"""
         log(log.info, f"{params.model_type} - {params.name}")
         _call = AutoEncoderLayers(params)
         if params.model_type == "lstm":

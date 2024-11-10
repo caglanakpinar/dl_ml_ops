@@ -18,6 +18,10 @@ class Paths:
     def checkpoint_directory(name) -> Path:
         return Paths.parent_dir / f"{Paths.checkpoint_dir}_{name.upper()}"
 
+    @staticmethod
+    def model_save_directory(name) -> Path:
+        return Paths.parent_dir / name.upper()
+
     def checkpoint_prefix_directory(self, name):
         return self.checkpoint_directory(name) / self.checkpoint_prefix
 

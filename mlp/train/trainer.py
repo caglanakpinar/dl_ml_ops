@@ -27,6 +27,7 @@ class Trainer:
 
     def trainer(self, data_class: BaseData):
         self.model.train(dataset=data_class.fetch_data())
+        self.model.save(self.model.model)
 
     def get_model(self, attribute_name):
         assert getattr(self, attribute_name, None) is not None, AttributeError(
