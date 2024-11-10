@@ -20,7 +20,10 @@ class Paths:
 
     @staticmethod
     def model_save_directory(name) -> Path:
-        return Paths.parent_dir / name.upper()
+        file_path = Paths.parent_dir / name.upper()
+        if not file_path.exists():
+            Path.mkdir(file_path)
+        return file_path
 
     def checkpoint_prefix_directory(self, name):
         return self.checkpoint_directory(name) / self.checkpoint_prefix

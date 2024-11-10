@@ -60,7 +60,7 @@ class BaseModel(Paths):
             str(datetime.datetime.now())
             .replace("-", "")
             .replace(" ", "")
-            .replace(":", "")[:12]
+            .replace(":", "")[:10]
         )
         model.save(
             self.model_save_directory(self.params.get("name")) / f"{file_name}.keras"
@@ -75,7 +75,7 @@ class BaseModel(Paths):
                 execution_time.replace("-", "").replace(" ", "").replace(":", "")
             )
             exec_t_length = len(execution_time)
-            if exec_t_length not in [12, 10]:
+            if exec_t_length not in [10, 8]:
                 raise log(
                     log.error,
                     """
@@ -83,7 +83,7 @@ class BaseModel(Paths):
                     e.g. 2024-11-11, 20241111, 2024-11-11 10, 2024111110
                 """,
                 )
-            if exec_t_length == 10:
+            if exec_t_length == 8:
                 execution_time += "00"
             file_name = f"{execution_time}.keras"
             if int(execution_time) not in model_saved_time:
