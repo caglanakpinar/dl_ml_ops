@@ -30,7 +30,10 @@ class Params(Paths):
     embedding_dimensions: int = 5
     max_len: int = 10
     continuous_training: bool = False
-    metrics: list | str = ["accuracy"]
+    # lstm parameters
+    tsteps: int = 1
+    lahead: int = 1
+    lag: int = 7
 
     def __init__(
         self,
@@ -89,9 +92,11 @@ class Params(Paths):
         :param params: dict to .yaml format
         """
         with open(
-            f"{str(folder)}.yaml"
-            if str(folder).split(".")[-1] not in ["yaml", "yml"]
-            else folder,
+            (
+                f"{str(folder)}.yaml"
+                if str(folder).split(".")[-1] not in ["yaml", "yml"]
+                else folder
+            ),
             "w",
         ) as file:
             yaml.dump(params, file)

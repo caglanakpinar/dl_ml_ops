@@ -101,13 +101,12 @@ class LSTMLayers:
         )
         _input = Input(
             name=f"{self.params.model_type}_{self.params.name}_input",
-            shape=(self.params.input_size, 1),
+            shape=(self.params.lag, 1),
         )
         _hidden = BatchNormalization()(_input)
         for _unit in h_units:  # iteratively adding each layer with given units
             _hidden = layers.LSTM(
                 _unit,
-                batch_size=self.params.batch_size,
                 recurrent_initializer=initializers.Ones(),
                 kernel_initializer=initializers.Ones(),
                 use_bias=False,
