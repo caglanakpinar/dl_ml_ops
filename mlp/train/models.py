@@ -54,7 +54,7 @@ class TextLayers:
                     self.params.activation
                 ),
                 dropout=self.params.dropout,
-            )(_input)
+            )(_hidden)
         output = layers.Dense(1, name=self.params.name)(_hidden)
         return _input, output
 
@@ -114,7 +114,7 @@ class LSTMLayers:
                     self.params.activation
                 ),
                 dropout=self.params.dropout,
-            )(_input)
+            )(_hidden)
         output = layers.Dense(
             1, name=f"{self.params.model_type}_{self.params.name}_output"
         )(_hidden)
