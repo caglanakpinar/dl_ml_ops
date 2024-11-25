@@ -1,0 +1,20 @@
+name: forecast
+checkpoint_save_frequency: 5
+tsteps: 1
+lahead: 1
+lag: 14
+units: 32
+h_layers: 1
+epochs: 500
+batch_count: 25
+batch_size: 64
+model_type: lstm
+metrics:
+  - mae
+loss: mae
+lstm_target: sales
+activation: tanh
+dropout: 0.2
+l1: 0
+l2: 0
+lr: 0.4
