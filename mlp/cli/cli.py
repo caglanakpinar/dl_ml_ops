@@ -2,7 +2,16 @@ from pydoc import locate
 
 import click
 
-from mlp import BaseHyperModel, BaseModel, HyperNetwork, Network, Trainer, Tuner
+from mlp import (
+    BaseHyperModel,
+    BaseModel,
+    HyperNetwork,
+    BaseServe,
+    Network,
+    Trainer,
+    Tuner,
+    ServeNetwork,
+)
 from mlp.configs import Params
 from mlp.data_access import BaseData
 
@@ -132,3 +141,42 @@ def tune(
         hyperparameter_config_path,
         data_class,
     )
+
+
+@model_run.command(
+    name="serve",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
+@click.option("--serving_class", required=False)
+@click.option(
+    "--server_config_path",
+    default="configs/serving_params.yaml",
+    help="where server .yaml is being stored",
+)
+@click.option("--continuous_training", default=True)
+@click.option("--build_network_from_config", default=False)
+def serve(
+    serving_class,
+    server_config_path,
+    continuous_training,
+    build_network_from_config,
+    **kwargs,
+):
+    params = Params(
+        server_config_path,
+        **{
+            **kwargs,
+            **{
+                "continuous_training": continuous_training,
+                "build_network_from_config": build_network_from_config,
+            },
+        },
+    )
+    server_class: BaseServe | ServeNetwork = (
+        ServeNetwork if build_network_from_config else import_class(serving_class)
+    )
+    s: BaseServe = server_class(params)
+    s.init_api()

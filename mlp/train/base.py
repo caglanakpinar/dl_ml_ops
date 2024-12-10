@@ -7,7 +7,7 @@ from keras import *
 from keras.src.layers import LeakyReLU
 from keras_tuner import HyperModel, HyperParameters, RandomSearch
 
-from mlp import BaseData, log
+from mlp import BaseData
 from mlp.configs import Params
 from mlp.utils import Paths
 
@@ -66,36 +66,13 @@ class BaseModel(Paths):
             self.model_save_directory(self.params.get("name")) / f"{file_name}.keras"
         )
 
-    def load(self, execution_time: str | None):
-        files = os.listdir(self.model_save_directory(self.params.get("name")))
-        model_saved_time = list(sorted([int(f.split(".")[0]) for f in files]))
-        file_name = f"{max(model_saved_time)}.keras"
-        if execution_time:
-            execution_time = (
-                execution_time.replace("-", "").replace(" ", "").replace(":", "")
-            )
-            exec_t_length = len(execution_time)
-            if exec_t_length not in [10, 8]:
-                raise log(
-                    log.error,
-                    """
-                    execution date will only takes date or date with hour.
-                    e.g. 2024-11-11, 20241111, 2024-11-11 10, 2024111110
-                """,
-                )
-            if exec_t_length == 8:
-                execution_time += "00"
-            file_name = f"{execution_time}.keras"
-            if int(execution_time) not in model_saved_time:
-                date = list(
-                    sorted(
-                        [(abs(int(execution_time) - t), t) for t in model_saved_time],
-                        key=lambda x: x[0],
-                    )
-                )[0][1]
-                file_name = f"{date}.keras"
+    @classmethod
+    def load(cls, params: Params):
+        files = os.listdir(Paths.model_save_directory(params.get("name")))
+        model_saved_time = list(sorted([int(f.split(".")[0]) for f in files]))[-1]
+        file_name = f"{model_saved_time}.keras"
         return keras.models.load_model(
-            self.model_save_directory(self.params.get("name")) / file_name
+            Paths.model_save_directory(params.get("name")) / file_name
         )
 
     @classmethod

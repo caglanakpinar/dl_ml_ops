@@ -1,0 +1,40 @@
+name: BINARY_CLASSIFICATION
+port: 8184
+host: 127.0.0.1
+serve:
+  inputs:
+    survived: None
+    age: None
+    fare: None
+    sex_female: None
+    sex_male: None
+    n_siblings_spouses_0: None
+    n_siblings_spouses_1: None
+    n_siblings_spouses_2: None
+    n_siblings_spouses_3: None
+    n_siblings_spouses_4: None
+    n_siblings_spouses_5: None
+    n_siblings_spouses_8: None
+    parch_0: None
+    parch_1: None
+    parch_2: None
+    parch_3: None
+    parch_4: None
+    parch_5: None
+    class_First: None
+    class_Second: None
+    class_Third: None
+    deck_A: None
+    deck_B: None
+    deck_C: None
+    deck_D: None
+    deck_E: None
+    deck_F: None
+    deck_G: None
+    deck_unknown: None
+    embark_town_Cherbourg: None
+    embark_town_Queenstown: None
+    embark_town_Southampton: None
+    embark_town_unknown: None
+  output:
+    alone: None

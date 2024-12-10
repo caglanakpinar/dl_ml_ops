@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any, Dict
 
 import yaml
 
@@ -25,6 +26,8 @@ class Params(Paths):
     loss: str = "binary_crossentropy"
     optimizer: str = "adam"
     model_type: str = "mlp"
+    metrics: list | str = ["accuracy"]
+    serve: Dict[str, Dict[str, Any]] | None = None
     # below parameters will be used only for LSTM-Text layers
     vocab_size: int = 1_000
     embedding_dimensions: int = 5

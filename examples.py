@@ -196,3 +196,13 @@ model train \
 --tuner_config_path example_configurations/binary_classification_params_VALIDATION_SPLIT_TUNE.yaml \
 --build_network_from_config False
 """
+
+# ---- SERVE NEURAL NETWORK FROM A CONFIGURATION .yaml ----#
+# from terminal, you can run for BINARY_CLASSIFICATION train
+"""
+poetry run python examples.py \
+model serve \
+--server_config_path example_configurations/binary_classification_params_SERVE.yaml \
+--build_network_from_config True
+
+"""
